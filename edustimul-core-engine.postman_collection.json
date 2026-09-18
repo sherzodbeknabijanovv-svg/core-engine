@@ -1,0 +1,58 @@
+{
+  "info": {
+    "name": "EduStimul Core Engine — Placement API",
+    "description": "Level Placement Test & AI Roadmap microservice. Run 'Start Session' first, then 'Submit Answer' repeatedly (40 times) using the session_id and question_id from each response, then 'Submit Essay' and 'Get Roadmap'.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8000" },
+    { "key": "session_id", "value": "" },
+    { "key": "question_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/health" }
+    },
+    {
+      "name": "1. Start Placement Session",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/v1/placement/start"
+      }
+    },
+    {
+      "name": "2. Submit Answer",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/v1/placement/answer",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"session_id\": \"{{session_id}}\",\n  \"question_id\": \"{{question_id}}\",\n  \"selected_index\": 0\n}"
+        }
+      }
+    },
+    {
+      "name": "3. Submit Essay",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/v1/placement/essay",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"session_id\": \"{{session_id}}\",\n  \"essay_text\": \"Write at least a 300-word essay here...\"\n}"
+        }
+      }
+    },
+    {
+      "name": "4. Get Roadmap (JSON)",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/placement/roadmap/{{session_id}}" }
+    },
+    {
+      "name": "5. Get Roadmap (PDF download)",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/placement/roadmap/{{session_id}}/pdf" }
+    }
+  ]
+}
